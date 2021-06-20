@@ -26,13 +26,14 @@ w0 = [0;0;0];
 
 %% Preallocate Memory:
 orbit = zeros(6,L);
+orbit(:,1) = [r0;v0];
 attitude = zeros(9,L);
 
 %% Simulate:
 for ii = 1:L
     % Propagate Truths:
-    orbit(:,ii+1) = rk4(@orbitalDynamics,dt,orbit(:,ii));
-    attitude(:,ii+1) = rk4(@rotationalDynamics,dt,attitude(:,ii));
+    orbit(:,ii+1) = rk4(@orbitalDynamics,dt,orbit(:,ii),mu);
+%     attitude(:,ii+1) = rk4(@rotationalDynamics,dt,attitude(:,ii));
     
     % Add in sensor models:
     
@@ -42,4 +43,5 @@ for ii = 1:L
 end
 
 %% Plot the results:
-drawPlanet(6371,'earth');
+drawPlanet(6371,'earth'); hold on
+plot3(orbit(1,:),orbit(2,:),orbit(3,:),'r','LineWidth',3)
